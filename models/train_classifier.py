@@ -1,3 +1,4 @@
+#! /usr/bin/env python3
 import sys
 import pandas as pd
 import sqlalchemy
@@ -16,7 +17,7 @@ from sklearn.multioutput import MultiOutputClassifier
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import classification_report,accuracy_score
 import pickle
-from sklearn.base import BaseEstimator, TransformerMixin
+
 
 def load_data(database_filepath):
     """Loads data from database.
@@ -142,6 +143,8 @@ def save_model(model):
     pickle.dump(model, open('classifier.pkl', 'wb'))
 
 def main():
+    """Excecutes steps to train a classifier.
+    """
     print(sys.argv)
     if len(sys.argv) == 2:
         database_filepath = sys.argv[1]

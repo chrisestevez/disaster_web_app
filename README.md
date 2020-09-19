@@ -61,7 +61,7 @@ cmd - python app.py
 
 
 # FOLDER STRUCTURE
-
+```
 - app
 | - template
 | |- master.html - main page of web app
@@ -83,6 +83,7 @@ cmd - python app.py
 
 - requirements.txt - packages used in project
 - README.md - project description
+```
 
 # WEB APP SCREENSHOTS
 

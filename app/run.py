@@ -8,6 +8,8 @@ from flask import render_template, request, jsonify
 from plotly.graph_objs import Bar
 from joblib import load
 from sqlalchemy import create_engine
+import re
+from nltk.corpus import stopwords
 
 app = Flask(__name__)
 
@@ -19,17 +21,25 @@ def tokenize(text):
 
     Returns:
         obj: Returns list of tokens.
-    """
-    tokens = word_tokenize(text)
+    """    
+    
+    stop_words = stopwords.words("english")
+    
     lemmatizer = WordNetLemmatizer()
-
-    clean_tokens = []
-    for tok in tokens:
-        clean_tok = lemmatizer.lemmatize(tok).lower().strip()
-        clean_tok = lemmatizer.lemmatize(clean_tok, pos='v')
-        clean_tokens.append(clean_tok)
-
-    return clean_tokens
+        
+    # normalize case and remove punctuation
+    text = re.sub(r"[^a-zA-Z0-9]", " ", text.lower())
+     
+    # tokenize text
+    tokens = word_tokenize(text)
+    
+    # lemmatize root and remove stop words
+    tokens = [lemmatizer.lemmatize(word) for word in tokens if word not in stop_words]
+    
+    # Lemmatize verbs by specifying pos
+    tokens = [WordNetLemmatizer().lemmatize(w, pos='v') for w in tokens]
+        
+    return tokens
 
 # load data
 engine = create_engine('sqlite:///./data/DisasterResponse.db')
@@ -120,9 +130,13 @@ def go():
     """
     # save user input in query
     query = request.args.get('query', '') 
+    # print(query)
+    #Clean query
+    # query = tokenize(query)
+    # print('cleaned---------------',query)
 
     # use model to predict classification for query
-    classification_labels = model.predict([query])[0]
+    classification_labels = model.predict(tokenize(query))[0] # model.predict([query])[0]
     classification_results = dict(zip(df.columns[4:], classification_labels))
 
     # This will render the go.html Please see that file. 

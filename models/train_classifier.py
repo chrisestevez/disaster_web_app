@@ -91,7 +91,7 @@ def build_model(clf=RandomForestClassifier(random_state=143)):
             ]))
         ])),
         ('clf', MultiOutputClassifier(clf))])
-
+    # to run full model please un comment and add comma
     parameters = {
     # 'features__text_pipeline__vect__ngram_range': ((1, 1), (1, 2)),
     # 'features__text_pipeline__vect__max_df': (0.5, 0.75, 1.0),
@@ -100,8 +100,8 @@ def build_model(clf=RandomForestClassifier(random_state=143)):
     # 'clf__estimator__bootstrap': [True, False],
     # 'clf__estimator__max_depth': [25, 50, 100, 250, 500], 
     # 'clf__estimator__max_features': ['auto', 'sqrt'],
-    # 'clf__estimator__min_samples_leaf': [1, 2],
-    # 'clf__estimator__min_samples_split': [2],
+    # 'clf__estimator__min_samples_leaf': [1, 2, 5, 10],
+    # 'clf__estimator__min_samples_split': [2, 5, 10],
     'clf__estimator__n_estimators': [25]
     # 'clf__estimator__criterion': ['entropy', 'gini'],
     # 'features__transformer_weights': (

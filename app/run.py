@@ -130,13 +130,10 @@ def go():
     """
     # save user input in query
     query = request.args.get('query', '') 
-    # print(query)
-    #Clean query
-    # query = tokenize(query)
-    # print('cleaned---------------',query)
+
 
     # use model to predict classification for query
-    classification_labels = model.predict(tokenize(query))[0] # model.predict([query])[0]
+    classification_labels = model.predict(tokenize(query))[0] 
     classification_results = dict(zip(df.columns[4:], classification_labels))
 
     # This will render the go.html Please see that file. 

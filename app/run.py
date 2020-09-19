@@ -1,20 +1,25 @@
 import json
 import plotly
 import pandas as pd
-
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
-
 from flask import Flask
 from flask import render_template, request, jsonify
 from plotly.graph_objs import Bar
 from joblib import load
 from sqlalchemy import create_engine
 
-
 app = Flask(__name__)
 
 def tokenize(text):
+    """normalizes,lemmatize, and tokenizes text.
+
+    Args:
+        text (str): Text to be normalized.
+
+    Returns:
+        obj: Returns list of tokens.
+    """
     tokens = word_tokenize(text)
     lemmatizer = WordNetLemmatizer()
 
@@ -33,24 +38,28 @@ df = pd.read_sql_table('disaster_data', engine)
 # load model
 model = load("./models/classifier.pkl")
 
-
 # index webpage displays cool visuals and receives user input text for model
 @app.route('/')
 @app.route('/index')
 def index():
+    """Website index.
+
+    Returns:
+        html: Webpage with classifier and plots.
+    """
     
     # extract data needed for visuals
     
     genre_counts = df.groupby('genre').count()['message']
+    
     genre_names = list(genre_counts.index)
     
     category_counts = df.iloc[:,4:].sum().sort_values(ascending=False)
-    # print(category_counts.head(5))
+    
     category_names = list(category_counts.index)
-    # print(category_names)
+    
     
     # create visuals
-    
     graphs = [
         {
             'data': [
@@ -92,7 +101,7 @@ def index():
         }
     ]
     
-    # print(graphs)
+
     # encode plotly graphs in JSON
     ids = ["graph-{}".format(i) for i, _ in enumerate(graphs)]
     graphJSON = json.dumps(graphs, cls=plotly.utils.PlotlyJSONEncoder)
@@ -104,6 +113,11 @@ def index():
 # web page that handles user query and displays model results
 @app.route('/go')
 def go():
+    """Classification results
+
+    Returns:
+        html: Displays classification results.
+    """
     # save user input in query
     query = request.args.get('query', '') 
 
@@ -120,6 +134,8 @@ def go():
 
 
 def main():
+    """Executes Flask app.
+    """
     app.run(host='0.0.0.0', port=3001, debug=True)
 
 
